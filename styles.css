@@ -10,7 +10,9 @@ body {
 body {
   margin: 0;
   overflow: hidden;
-  background: #000;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.035), transparent 24rem),
+    #000;
   color: #e8e8e8;
   font-family: "Courier New", monospace;
 }
@@ -22,13 +24,13 @@ body::before {
   pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
-    rgba(255, 255, 255, 0.04) 0,
-    rgba(255, 255, 255, 0.04) 1px,
+    rgba(255, 255, 255, 0.045) 0,
+    rgba(255, 255, 255, 0.045) 1px,
     transparent 1px,
     transparent 4px
   );
-  opacity: 0.24;
-  animation: scan-drift 12s infinite steps(20);
+  opacity: 0.28;
+  animation: scan-drift 12s infinite steps(20), breathe 9s infinite ease-in-out;
 }
 
 body::after {
@@ -37,7 +39,7 @@ body::after {
   inset: -20%;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent 0 42%, rgba(0, 255, 110, 0.22) 43%, transparent 45%),
+    linear-gradient(90deg, transparent 0 42%, rgba(0, 255, 110, 0.28) 43%, transparent 45%),
     linear-gradient(180deg, transparent 0 18%, rgba(255, 0, 84, 0.2) 19%, transparent 20%),
     linear-gradient(180deg, transparent 0 61%, rgba(0, 180, 255, 0.18) 62%, transparent 63%);
   mix-blend-mode: screen;
@@ -60,6 +62,14 @@ main {
   min-height: 100vh;
   place-items: center;
   padding: 24px;
+}
+
+main {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px) 22px 22px / 36px 1px no-repeat,
+    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px) 22px 22px / 1px 36px no-repeat,
+    linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px) calc(100% - 58px) calc(100% - 22px) / 36px 1px no-repeat,
+    linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px) calc(100% - 22px) calc(100% - 58px) / 1px 36px no-repeat;
 }
 
 main::before,
@@ -97,6 +107,7 @@ main::after {
 
 form {
   width: min(360px, 100%);
+  animation: terminal-drift 13s infinite steps(1);
 }
 
 input {
@@ -117,6 +128,13 @@ input {
     0 0 14px rgba(255, 255, 255, 0.08);
   text-transform: none;
   transition: border-color 0.6s, color 0.6s, filter 0.6s, text-shadow 0.6s;
+}
+
+input::placeholder {
+  color: rgba(232, 232, 232, 0.38);
+  text-shadow:
+    1px 0 rgba(0, 255, 110, 0.24),
+    -1px 0 rgba(255, 0, 84, 0.2);
 }
 
 input:focus {
@@ -181,6 +199,11 @@ output.error {
   100% { transform: translateY(9px); }
 }
 
+@keyframes breathe {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.34; }
+}
+
 @keyframes text-glitch {
   0% {
     transform: translate(0);
@@ -203,16 +226,23 @@ output.error {
   }
   74% {
     opacity: 0.9;
-    transform: translate(26px, -11px) skewX(15deg) scaleX(1.04);
+    transform: translate(32px, -11px) skewX(18deg) scaleX(1.07);
   }
   75% {
-    opacity: 0.22;
-    transform: translate(-22px, 8px) skewX(-18deg) scaleX(0.98);
+    opacity: 0.28;
+    transform: translate(-28px, 8px) skewX(-20deg) scaleX(0.96);
   }
   76% {
     opacity: 0;
     transform: translate(0);
   }
+}
+
+@keyframes terminal-drift {
+  0%, 68%, 100% { transform: translate(0); }
+  69% { transform: translate(1px, 0); }
+  70% { transform: translate(-1px, 1px); }
+  71% { transform: translate(0); }
 }
 
 @keyframes green-slice {
