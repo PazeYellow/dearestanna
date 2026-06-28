@@ -1,4 +1,4 @@
-const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev";
+const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev/";
 
 const form = document.querySelector("#entry-form");
 const entryInput = document.querySelector("#entry");
@@ -73,6 +73,7 @@ form.addEventListener("submit", async (event) => {
 
     const reply = await fetch(WORKER_URL, {
       method: "POST",
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
