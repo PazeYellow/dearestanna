@@ -3,9 +3,8 @@ const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev/";
 const form = document.querySelector("#entry-form");
 const entryInput = document.querySelector("#entry");
 const responseBox = document.querySelector("#response");
-const brokenFrames = ["", ".", "..", "...", "./.", "_", ".__", "wait", "wait.", "wait.."];
 
-let frameTimer;
+let glitchTimer;
 let checking = false;
 
 function sleep(ms) {
@@ -34,23 +33,21 @@ function setInputState(state) {
 }
 
 function startWrongDelay() {
-  let index = 0;
-
-  clearInterval(frameTimer);
+  clearInterval(glitchTimer);
   entryInput.readOnly = true;
   setInputState("waiting");
 
-  frameTimer = setInterval(() => {
-    entryInput.value = brokenFrames[index % brokenFrames.length];
+  glitchTimer = setInterval(() => {
     glitchElement(entryInput);
-    index += 1;
-  }, 290);
+    document.body.classList.toggle("chroma-shift");
+  }, 230);
 }
 
 function stopWrongDelay() {
-  clearInterval(frameTimer);
-  frameTimer = null;
+  clearInterval(glitchTimer);
+  glitchTimer = null;
   entryInput.readOnly = false;
+  document.body.classList.remove("chroma-shift");
 }
 
 form.addEventListener("submit", async (event) => {
