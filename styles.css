@@ -1,0 +1,135 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  color: #e8e8e8;
+  font-family: "Courier New", monospace;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.04) 0,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  opacity: 0.2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 47%, rgba(255, 255, 255, 0.08) 48%, transparent 49%),
+    linear-gradient(180deg, transparent 0 78%, rgba(255, 255, 255, 0.06) 79%, transparent 80%);
+  opacity: 0;
+  animation: glitch-flash 7s infinite steps(1);
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+}
+
+form {
+  width: min(360px, 100%);
+}
+
+input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #555;
+  border-radius: 0;
+  background: transparent;
+  color: #f2f2f2;
+  font: inherit;
+  font-size: 20px;
+  outline: none;
+  padding: 10px 2px;
+  text-align: center;
+}
+
+input:focus {
+  border-bottom-color: #fff;
+}
+
+output {
+  position: fixed;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  min-height: 1.4em;
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+output.success {
+  color: #fff;
+}
+
+output.error {
+  color: #777;
+}
+
+.glitch {
+  animation: text-glitch 0.18s steps(2);
+}
+
+@keyframes text-glitch {
+  0% {
+    transform: translate(0);
+    text-shadow: 0 0 transparent;
+  }
+  35% {
+    transform: translate(2px, -1px);
+    text-shadow: 3px 0 #888, -3px 0 #333;
+  }
+  70% {
+    transform: translate(-2px, 1px);
+  }
+  100% {
+    transform: translate(0);
+    text-shadow: 0 0 transparent;
+  }
+}
+
+@keyframes glitch-flash {
+  0%, 91%, 100% {
+    opacity: 0;
+    transform: translate(0);
+  }
+  92% {
+    opacity: 0.8;
+    transform: translate(18px, -10px);
+  }
+  93% {
+    opacity: 0.1;
+    transform: translate(-14px, 8px);
+  }
+  94% {
+    opacity: 0;
+    transform: translate(0);
+  }
+}
