@@ -1,31 +1,79 @@
 const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev/";
 
-const form = document.querySelector("#password-form");
-const passwordInput = document.querySelector("#password");
+const form = document.querySelector("#entry-form");
+const entryInput = document.querySelector("#entry");
 const responseBox = document.querySelector("#response");
+const brokenFrames = ["", ".", "..", "...", "./.", "_", ".__", "wait", "wait.", "wait.."];
 
-function setResponse(message, state = "") {
+let frameTimer;
+let checking = false;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function glitchElement(element) {
+  element.classList.remove("glitch");
+  void element.offsetWidth;
+  element.classList.add("glitch");
+}
+
+function setResponse(message) {
   responseBox.textContent = message;
-  responseBox.className = `response ${state}`.trim();
-  responseBox.classList.remove("glitch");
-  void responseBox.offsetWidth;
-  responseBox.classList.add("glitch");
+  glitchElement(responseBox);
+}
+
+function setInputState(state) {
+  entryInput.classList.remove("waiting", "success", "error");
+
+  if (state) {
+    entryInput.classList.add(state);
+  }
+
+  glitchElement(entryInput);
+}
+
+function startWrongDelay() {
+  let index = 0;
+
+  clearInterval(frameTimer);
+  entryInput.readOnly = true;
+  setInputState("waiting");
+
+  frameTimer = setInterval(() => {
+    entryInput.value = brokenFrames[index % brokenFrames.length];
+    glitchElement(entryInput);
+    index += 1;
+  }, 290);
+}
+
+function stopWrongDelay() {
+  clearInterval(frameTimer);
+  frameTimer = null;
+  entryInput.readOnly = false;
 }
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const password = passwordInput.value.trim();
-
-  if (!password) {
-    setResponse("", "error");
+  if (checking) {
     return;
   }
 
-  passwordInput.disabled = true;
+  const password = entryInput.value.trim();
+
+  if (!password) {
+    setInputState("error");
+    return;
+  }
+
+  checking = true;
+  startWrongDelay();
   setResponse("");
 
   try {
+    await sleep(900 + Math.random() * 900);
+
     const reply = await fetch(WORKER_URL, {
       method: "POST",
       headers: {
@@ -34,18 +82,37 @@ form.addEventListener("submit", async (event) => {
       body: JSON.stringify({ password }),
     });
 
+    await sleep(600 + Math.random() * 1000);
+
     const data = await reply.json();
+    stopWrongDelay();
 
     if (!reply.ok || !data.ok) {
-      setResponse(data.message || "", "error");
+      entryInput.value = password;
+      setInputState("error");
+      document.body.classList.remove("bad");
+      void document.body.offsetWidth;
+      document.body.classList.add("bad");
       return;
     }
 
-    setResponse(data.message || "", "success");
+    entryInput.value = data.message || "";
+    setInputState("success");
   } catch (error) {
-    setResponse("", "error");
+    stopWrongDelay();
+    entryInput.value = password;
+    setInputState("error");
+    document.body.classList.remove("bad");
+    void document.body.offsetWidth;
+    document.body.classList.add("bad");
   } finally {
-    passwordInput.disabled = false;
-    passwordInput.focus();
+    stopWrongDelay();
+    checking = false;
+    entryInput.focus();
   }
+});
+
+entryInput.addEventListener("input", () => {
+  document.body.classList.remove("bad");
+  entryInput.classList.remove("success", "error");
 });
