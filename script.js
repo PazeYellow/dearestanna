@@ -1,4 +1,4 @@
-const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev/";
+const WORKER_URL = "https://dearestanna.theyellowlightsader.workers.dev";
 
 const form = document.querySelector("#entry-form");
 const entryInput = document.querySelector("#entry");
